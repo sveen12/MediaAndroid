@@ -9,52 +9,85 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import co.edu.udea.compumovil.gr01.mediaandroid.Canciones.Cancion;
+
 public class MainActivity extends AppCompatActivity {
-    ListView listamusicos; //Iniciamos la lista
-    MediaPlayer md; //Iniciamos el objeto MediaPlayer en contexto de clase para que se vea en cualquier metodo.
-    String[] musicos = {"Let her go"}; //Array de Strings para mostrar en la lista
-    String cancion; //Variable para lanzar el Toast previo a la cancion
+    private ListView listamusicos; //Iniciamos la lista
+    private MediaPlayer mediaPlayer; //Iniciamos el objeto MediaPlayer en contexto de clase para que se vea en cualquier metodo.
+    private List<Cancion> canciones; //Variable para lanzar el Toast previo a la cancion
+    private Button play, stop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        canciones = new ArrayList<>();
+
+        play = (Button) findViewById(R.id.btn_play);
+        stop = (Button) findViewById(R.id.btn_stop);
+
+        Field[] fields=R.raw.class.getFields();
+        for(int i= 1; i < fields.length; i++){
+            canciones.add(  new Cancion(fields[i].getName(),
+                                            getResources().getIdentifier(fields[i].getName(),
+                                            "raw",
+                                            getPackageName())));
+        }
+
+        play.setEnabled(false);
+        stop.setEnabled(false);
+
         listamusicos = (ListView) findViewById(R.id.lista_musica);
-        listamusicos.setAdapter(new ArrayAdapter(this,android.R.layout.simple_list_item_1, musicos)); //Aplicamos el Adaptador
+        listamusicos.setAdapter(new ArrayAdapter(this,android.R.layout.simple_list_item_1, canciones)); //Aplicamos el Adaptador
 
         listamusicos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i){
-                    case 0:
-                        cancion = musicos[i].toString(); //Recogemos el String del array para mostrar el Toast
-                        Toast.makeText(getApplicationContext(),"La cancion es de - " + cancion, Toast.LENGTH_LONG).show(); //Lanzamos el Toast con el titulo
-                        md = MediaPlayer.create(getApplicationContext(),R.raw.let_her_go); //Creamos el Objeto MediaPlay con los parametros (Donde se va a escuchar, Que cancion se va a escuchar)
-                        break;
-                }
+
+                Toast.makeText( getApplicationContext(),
+                                "La cancion es " + canciones.get(i).getTitulo(),
+                                Toast.LENGTH_LONG).show();
+
+                mediaPlayer = MediaPlayer.create(   getApplicationContext(),
+                                canciones.get(i).getId()); //Creamos el Objeto MediaPlay con los parametros (Donde se va a escuchar, Que cancion se va a escuchar)
+                play.setEnabled(true);
             }
         });
     }
 
-
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btn_play:
-                md.start();
+                if(mediaPlayer !=null){
+                    mediaPlayer.start();
+                    stop.setEnabled(true);
+                }else{
+                    Toast.makeText(this,"No ha seleccionado ningún audio.", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btn_stop:
-                md.stop();
+                if(stop.isEnabled()){
+                    mediaPlayer.stop();
+                    mediaPlayer = null;
+                    play.setEnabled(false);
+                    stop.setEnabled(false);
+                }
                 break;
-            case R.id.btn_ventanados:
-                Intent in = new Intent(getApplicationContext(), VentanaDosActivity.class);
-                startActivity(in);
-                break;
-            case R.id.btn_ventanatres:
-                Intent in2 = new Intent(getApplicationContext(), StreamingActivity.class);
-                startActivity(in2);
+
+            case R.id.btn_streaming:
+                Intent intent = new Intent(this, StreamingActivity.class);
+                startActivity(intent);
                 break;
         }
     }

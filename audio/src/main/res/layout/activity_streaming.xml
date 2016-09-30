@@ -14,7 +14,8 @@
         android:id="@+id/internet_music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Musica de Internet" />
+        android:text="Musica de Internet"
+        android:onClick="streamingOnClick"/>
     <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
