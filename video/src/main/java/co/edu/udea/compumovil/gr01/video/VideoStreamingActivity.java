@@ -23,8 +23,8 @@ public class VideoStreamingActivity extends AppCompatActivity
         setContentView(R.layout.activity_video_streaming);
 
         mediaController = new MediaController(this);
-
         surfaceView = (SurfaceView) findViewById(R.id.surfView);
+
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
     }

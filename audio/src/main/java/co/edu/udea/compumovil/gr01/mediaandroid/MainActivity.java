@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         canciones = new ArrayList<>();
-
         play = (Button) findViewById(R.id.btn_play);
         stop = (Button) findViewById(R.id.btn_stop);
+        listamusicos = (ListView) findViewById(R.id.lista_musica);
 
         Field[] fields=R.raw.class.getFields();
         for(int i= 1; i < fields.length; i++){
@@ -44,11 +44,10 @@ public class MainActivity extends AppCompatActivity {
         play.setEnabled(false);
         stop.setEnabled(false);
 
-        listamusicos = (ListView) findViewById(R.id.lista_musica);
+
         listamusicos.setAdapter(new ArrayAdapter(this,android.R.layout.simple_list_item_1, canciones)); //Aplicamos el Adaptador
 
         listamusicos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 

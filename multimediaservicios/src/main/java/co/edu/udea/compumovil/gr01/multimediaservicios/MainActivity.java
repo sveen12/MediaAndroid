@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         Intent intent = new Intent(this, MyService.class);
-
         switch (view.getId()){
             case R.id.btnIniciar:
                 intent.setAction(ACTION_PLAY);

@@ -25,7 +25,6 @@ public class MyService extends Service implements MediaPlayer.OnPreparedListener
             player.setOnPreparedListener(this);
         }
         return super.onStartCommand(intent, flags, startId);
-
     }
 
     @Override

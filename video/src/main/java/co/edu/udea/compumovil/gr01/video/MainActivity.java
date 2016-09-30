@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         // MediaController mc = new MediaController(this);
         //videoView.setMediaController(mc);
         videoView.setVideoURI(path);
-
-
     }
 
     public void onClick(View view) {
@@ -40,8 +38,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
         }
-
-
-
     }
 }
